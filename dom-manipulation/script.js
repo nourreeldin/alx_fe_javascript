@@ -21,7 +21,6 @@ function saveQuotes() {
 function populateCategories() {
   const categoryFilter = document.getElementById("categoryFilter");
 
-
   while (categoryFilter.firstChild) {
     categoryFilter.removeChild(categoryFilter.firstChild);
   }
@@ -147,7 +146,7 @@ function importFromJsonFile(event) {
   fileReader.readAsText(event.target.files[0]);
 }
 
-function fetchServerQuotes() {
+function fetchQuotesFromServer() {
   fetch('https://jsonplaceholder.typicode.com/posts')
     .then(response => response.json())
     .then(serverQuotes => {
@@ -165,7 +164,6 @@ function syncQuotesWithServer(serverQuotes) {
     if (localQuoteIndex === -1) {
       localQuotes.push(serverQuote);
     } else if (localQuotes[localQuoteIndex].text !== serverQuote.text) {
-
       localQuotes[localQuoteIndex] = serverQuote;
       alert(`Conflict resolved: Quote with ID ${serverQuote.id} was updated.`);
     }
@@ -176,8 +174,7 @@ function syncQuotesWithServer(serverQuotes) {
   filterQuotes();
 }
 
-
-setInterval(fetchServerQuotes, 300000);
+setInterval(fetchQuotesFromServer, 300000);
 
 document.addEventListener("DOMContentLoaded", () => {
   loadQuotes();
