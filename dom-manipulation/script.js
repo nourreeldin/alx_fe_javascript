@@ -1,6 +1,6 @@
 let quotes = [];
 
-function loadQuotes() {
+async function loadQuotes() {
   const storedQuotes = localStorage.getItem("quotes");
   if (storedQuotes) {
     quotes = JSON.parse(storedQuotes);
@@ -146,13 +146,14 @@ function importFromJsonFile(event) {
   fileReader.readAsText(event.target.files[0]);
 }
 
-function fetchQuotesFromServer() {
-  fetch('https://jsonplaceholder.typicode.com/posts')
-    .then(response => response.json())
-    .then(serverQuotes => {
-      syncQuotesWithServer(serverQuotes);
-    })
-    .catch(error => console.error('Error fetching server quotes:', error));
+async function fetchQuotesFromServer() {
+  try {
+    const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+    const serverQuotes = await response.json();
+    syncQuotesWithServer(serverQuotes);
+  } catch (error) {
+    console.error('Error fetching server quotes:', error);
+  }
 }
 
 function syncQuotesWithServer(serverQuotes) {
