@@ -7,12 +7,12 @@ let quotes = [
   function showRandomQuote() {
     const quoteDisplay = document.getElementById("quoteDisplay");
     if (quotes.length === 0) {
-      quoteDisplay.textContent = "No quotes available.";
+      quoteDisplay.innerHTML = "No quotes available.";
       return;
     }
     const randomIndex = Math.floor(Math.random() * quotes.length);
     const quote = quotes[randomIndex];
-    quoteDisplay.textContent = `"${quote.text}" — ${quote.category}`;
+    quoteDisplay.innerHTML = `"${quote.text}" — ${quote.category}`;
   }
   
   function createAddQuoteForm() {
@@ -29,7 +29,7 @@ let quotes = [
     categoryInput.placeholder = "Enter quote category";
   
     const addButton = document.createElement("button");
-    addButton.textContent = "Add Quote";
+    addButton.innerHTML = "Add Quote";
     addButton.onclick = addQuote;
   
     formContainer.appendChild(quoteInput);
