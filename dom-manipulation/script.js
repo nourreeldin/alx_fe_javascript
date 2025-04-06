@@ -6,9 +6,9 @@ function loadQuotes() {
     quotes = JSON.parse(storedQuotes);
   } else {
     quotes = [
-      { text: "The best way to get started is to quit talking and begin doing.", category: "Motivation" },
-      { text: "Life is what happens when you're busy making other plans.", category: "Life" },
-      { text: "If you judge people, you have no time to love them.", category: "Love" }
+      { id: 1, text: "The best way to get started is to quit talking and begin doing.", category: "Motivation" },
+      { id: 2, text: "Life is what happens when you're busy making other plans.", category: "Life" },
+      { id: 3, text: "If you judge people, you have no time to love them.", category: "Love" }
     ];
     saveQuotes();
   }
@@ -99,7 +99,12 @@ function addQuote() {
   const quoteCat = document.getElementById("newQuoteCategory").value.trim();
 
   if (quoteText && quoteCat) {
-    quotes.push({ text: quoteText, category: quoteCat });
+    const newQuote = {
+      id: quotes.length + 1,
+      text: quoteText,
+      category: quoteCat
+    };
+    quotes.push(newQuote);
     saveQuotes();
     populateCategories();
 
@@ -141,6 +146,38 @@ function importFromJsonFile(event) {
   };
   fileReader.readAsText(event.target.files[0]);
 }
+
+function fetchServerQuotes() {
+  fetch('https://jsonplaceholder.typicode.com/posts')
+    .then(response => response.json())
+    .then(serverQuotes => {
+      syncQuotesWithServer(serverQuotes);
+    })
+    .catch(error => console.error('Error fetching server quotes:', error));
+}
+
+function syncQuotesWithServer(serverQuotes) {
+  const localQuotes = JSON.parse(localStorage.getItem('quotes')) || [];
+
+  serverQuotes.forEach(serverQuote => {
+    const localQuoteIndex = localQuotes.findIndex(q => q.id === serverQuote.id);
+
+    if (localQuoteIndex === -1) {
+      localQuotes.push(serverQuote);
+    } else if (localQuotes[localQuoteIndex].text !== serverQuote.text) {
+
+      localQuotes[localQuoteIndex] = serverQuote;
+      alert(`Conflict resolved: Quote with ID ${serverQuote.id} was updated.`);
+    }
+  });
+
+  localStorage.setItem('quotes', JSON.stringify(localQuotes));
+  populateCategories();
+  filterQuotes();
+}
+
+
+setInterval(fetchServerQuotes, 300000);
 
 document.addEventListener("DOMContentLoaded", () => {
   loadQuotes();
