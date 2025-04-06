@@ -156,6 +156,22 @@ async function fetchQuotesFromServer() {
   }
 }
 
+async function sendQuoteToServer(quote) {
+  try {
+    const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(quote),
+    });
+    const serverResponse = await response.json();
+    console.log('Quote added to server:', serverResponse);
+  } catch (error) {
+    console.error('Error sending quote to server:', error);
+  }
+}
+
 function syncQuotesWithServer(serverQuotes) {
   const localQuotes = JSON.parse(localStorage.getItem('quotes')) || [];
 
