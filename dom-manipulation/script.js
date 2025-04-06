@@ -189,6 +189,7 @@ function syncQuotesWithServer(serverQuotes) {
   localStorage.setItem('quotes', JSON.stringify(localQuotes));
   populateCategories();
   filterQuotes();
+  alert("Quotes synced with server!");
 }
 
 setInterval(fetchQuotesFromServer, 300000);
